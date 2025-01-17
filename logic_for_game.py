@@ -51,7 +51,6 @@ class Slot:
 
 class Slots:
     """A circular random aceess linked list with all the slots in a Mancala board.
-    #TODO: do I like this discription and goal being public?
 
     Attributes:
         goal: goal slot in the board with index 0
@@ -109,7 +108,6 @@ class Board:
     _start: int
     _stop: int
     _hand: int
-    # TODO: need _hand?
 
     def __init__(self, length: int, pebbles_per_slot: int) -> None:
         """Initializes a board with length slots excluding goal with pebbles_per_slot pebbles in each slot
@@ -225,6 +223,9 @@ class Move:
                 posible_moves.append(i)
         return posible_moves
 
+    def get_start(self) -> int:
+        return self.board.get_start()
+
 def drop(board: Board, start: int) -> None:
     """Updates board with a turn picking up pebbles from start slot and dropping them till hand runs out.
     Start is not updated
@@ -232,9 +233,6 @@ def drop(board: Board, start: int) -> None:
     preconditions:
         start must be a valid index in the board meaning
         board[start].get_pebbles() > 0
-
-    TODO more tests for stop
-    TODO clean up tests
 
     >>> board = Board(6, 2)
     >>> drop(board, 5)
@@ -290,7 +288,9 @@ def play_turn(board: Board, start: int) -> None:
     board.set_start(start)
 
 def simulate_game(move: Move) -> Move:
-    """ Returns best final turn and updates the move tree with all trials before. There maybe a starting move that earns more points but the first one that wins the game is returned or the best one.
+    """ Returns best final turn and updates the move tree with all trials before.
+    There maybe a starting move that earns more points, but the first one that
+    wins the game is returned or the best one.
 
     >>> board = Board(6, 2)
     >>> move = Move(board)
@@ -317,7 +317,6 @@ def simulate_game(move: Move) -> Move:
         else:
             simulate_game(move.get_children()[child_index])
         child_index += 1
-        # try by hand if child_index works
     return best_move
 
 def does_guarantee_win(move: Move) -> bool:
@@ -330,13 +329,12 @@ def print_move(move_tree: Move, move: Move) -> None:
     Precondition:
         move is in move_tree
     """
-    # TODO: test
     move_stack = []
     while move.get_parent() is not None:
         move_stack.append(move)
         move = move.get_parent()
 
-    while not move_stack.is_empty():
+    while len(move_stack) != 0:
         current = move_stack.pop()
         print(f"pick up {current.get_start()} so the score will be {current.get_score()}")
 
